@@ -5,4 +5,5 @@ class AppConfig{
   static String addNewPlace = "Add New Place";
   static String title = "Title";
   static String addPlace = "Add Place";
+  static String takePicture = "Take Picture";
 }
