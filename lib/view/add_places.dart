@@ -1,6 +1,7 @@
 import 'package:favourite_place/controller/add_place_controller.dart';
 import 'package:favourite_place/utils/config.dart';
 import 'package:favourite_place/widgets/image_input.dart';
+import 'package:favourite_place/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -35,6 +36,10 @@ class _AddPlacesScreenState extends State<AddPlacesScreen> {
               height: 10,
             ),
             const ImageInput(),
+            const SizedBox(
+              height: 10,
+            ),
+            const LocationInput(),
             const SizedBox(
               height: 16,
             ),

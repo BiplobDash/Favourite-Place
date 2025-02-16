@@ -25,9 +25,16 @@ class PlacesListScreen extends StatelessWidget {
         return ListView.builder(
           itemCount: places.length,
           itemBuilder: (ctx, index) => ListTile(
+            leading: CircleAvatar(
+                radius: 26, backgroundImage: FileImage(places[index].image)),
             title: Text(
               places[index].title,
               style: theme.textTheme.titleMedium!
+                  .copyWith(color: theme.colorScheme.onSurface),
+            ),
+            subtitle: Text(
+              places[index].location.address,
+              style: theme.textTheme.bodySmall!
                   .copyWith(color: theme.colorScheme.onSurface),
             ),
             onTap: () {

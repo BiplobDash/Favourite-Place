@@ -12,7 +12,22 @@ dependencies:
   google_fonts:
   get:
   image_picker:
-  uuid: 
+  uuid:
+  location:
+  http:
+  dartz:
+  flutter_map:
+  latlong2:
+  equatable:
+  flutter_dotenv:
+  google_maps_flutter:
+  path_provider:
+  path:
+  sqflite:
+  shared_preferences:
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

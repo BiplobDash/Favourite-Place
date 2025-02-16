@@ -6,4 +6,7 @@ class AppConfig{
   static String title = "Title";
   static String addPlace = "Add Place";
   static String takePicture = "Take Picture";
+  static String getCurrentLocation = "Get Current Location";
+  static String selectOnMap = "Select On Map";
+  static String noLocationChosen = "No Location Chosen";
 }

@@ -25,8 +25,11 @@ class PlaceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: PlacesListScreen(
-        places: addPlaceController.places,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: PlacesListScreen(
+          places: addPlaceController.places,
+        ),
       ),
     );
   }

@@ -10,22 +10,8 @@ class ImageInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final addPlaceController = Get.put(AddPlaceController());
-    Widget content = TextButton.icon(
-      onPressed: addPlaceController.takePicture,
-      label: Text(AppConfig.takePicture),
-      icon: const Icon(Icons.camera),
-    );
 
-    if (addPlaceController.selectedImage != null) {
-      content = GestureDetector(
-        onTap: addPlaceController.takePicture,
-        child: Image.file(
-          addPlaceController.selectedImage!,
-          fit: BoxFit.cover,
-          width: double.infinity,
-        ),
-      );
-    }
+
     return Container(
       width: double.infinity,
       height: 250,
@@ -36,7 +22,23 @@ class ImageInput extends StatelessWidget {
           color: theme.colorScheme.primary.withOpacity(0.2),
         ),
       ),
-      child: content,
+      child: Obx((){
+        if (addPlaceController.selectedImage.value != null) {
+          return GestureDetector(
+            onTap: addPlaceController.takePicture,
+            child: Image.file(
+              addPlaceController.selectedImage.value!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          );
+        }
+        return TextButton.icon(
+          onPressed: addPlaceController.takePicture,
+          label: Text(AppConfig.takePicture),
+          icon: const Icon(Icons.camera),
+        );
+      }),
     );
   }
 }
