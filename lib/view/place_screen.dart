@@ -1,4 +1,5 @@
 import 'package:favourite_place/controller/add_place_controller.dart';
+import 'package:favourite_place/controller/database_controller.dart';
 import 'package:favourite_place/utils/config.dart';
 import 'package:favourite_place/view/add_places.dart';
 import 'package:favourite_place/widgets/places_list.dart';
@@ -11,6 +12,7 @@ class PlaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final addPlaceController = Get.put(AddPlaceController());
+    final databaseController = Get.put(DatabaseController());
     return Scaffold(
       appBar: AppBar(
         title: Text(AppConfig.yourPlaces),
@@ -27,9 +29,9 @@ class PlaceScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: PlacesListScreen(
+        child: FutureBuilder(future: databaseController.loadPlaces(), builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? const Center(child: CircularProgressIndicator(),): PlacesListScreen(
           places: addPlaceController.places,
-        ),
+        ),),
       ),
     );
   }

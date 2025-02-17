@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:favourite_place/controller/database_controller.dart';
 import 'package:favourite_place/model/place.dart';
 import 'package:favourite_place/view/map_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,15 +9,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart' as syspaths;
 
 class AddPlaceController extends GetxController {
-
   final titleController = TextEditingController();
   var places = <Place>[].obs;
   var selectedImage = Rx<File?>(null);
   PlaceLocation? pickedLocation;
   RxBool isGettingLocation = false.obs;
-  final String _key = "AIzaSyD9bX-LxrmtDFbF5ehIVg7gtZSdtcsxwec";
+  final String _key = "AIzaSyBESyqXBQJqyHidmmxNay_GAVCmssWZfzE";
+
+  final dbController = Get.put(DatabaseController());
 
   @override
   void dispose() {
@@ -24,16 +28,32 @@ class AddPlaceController extends GetxController {
     titleController.dispose();
   }
 
+
+
   // Save Data in Places Model
-  void savePlace() {
+  void savePlace() async {
+    final appDir = await syspaths.getApplicationDocumentsDirectory();
+    final filename = basename(selectedImage.value!.path);
+    final copiedImage =
+        await selectedImage.value!.copy('${appDir.path}/$filename');
     if (titleController.text.isNotEmpty ||
         selectedImage.value != null ||
         pickedLocation != null) {
       final newPlace = Place(
         title: titleController.text,
-        image: selectedImage.value!,
+        image: copiedImage,
         location: pickedLocation!,
       );
+      final db = await dbController.getDatabase();
+      db.insert('user_places', {
+        'id' : newPlace.id,
+        'title' : newPlace.title,
+        'image' : newPlace.image.path,
+        'lat' : newPlace.location.latitude,
+        'lng' : newPlace.location.longitude,
+        'address' : newPlace.location.address,
+      });
+
       places.add(newPlace);
       titleController.clear();
       Get.back(); // Clear input field after saving
@@ -54,15 +74,15 @@ class AddPlaceController extends GetxController {
   }
 
   // Save Location
-  void _savePlaceLoc(double latitude, double longitude) async{
+  void _savePlaceLoc(double latitude, double longitude) async {
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$_key');
     final response = await http.get(url);
     final resData = json.decode(response.body);
     final address = resData['results'][0]['formatted_address'];
 
-    pickedLocation =
-        PlaceLocation(latitude: latitude, longitude: longitude, address: address);
+    pickedLocation = PlaceLocation(
+        latitude: latitude, longitude: longitude, address: address);
     isGettingLocation.value = false;
     onInit();
   }
@@ -110,9 +130,9 @@ class AddPlaceController extends GetxController {
   }
 
   // Select On Map
-  void selectOnMap() async{
-    final pickedLocation =  await Get.to<LatLng>(() => const MapScreen());
-    if(pickedLocation == null) return;
+  void selectOnMap() async {
+    final pickedLocation = await Get.to<LatLng>(() => const MapScreen());
+    if (pickedLocation == null) return;
     _savePlaceLoc(pickedLocation.latitude, pickedLocation.longitude);
   }
 }

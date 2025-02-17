@@ -24,7 +24,6 @@ dependencies:
   path_provider:
   path:
   sqflite:
-  shared_preferences:
 
 
 
