@@ -22,18 +22,24 @@ class PlaceDetailScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Image.file(
-            place.image,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: double.infinity,
-          ),
+          if (place.image.existsSync()) // Image file exists or not
+            Image.file(
+              place.image,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (context, error, stackTrace) =>
+              const Center(child: Text("Error loading image")),
+            )
+          else
+            const Center(child: Text("No image available")),
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             child: Column(
               children: [
+
                 GestureDetector(
                   onTap: () {
                     Get.to(() => MapScreen(
@@ -44,9 +50,16 @@ class PlaceDetailScreen extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 70,
                     backgroundImage:
-                        NetworkImage(addPlaceController.locationImage),
+                          place.location.address.isNotEmpty
+                          ? NetworkImage(
+                            addPlaceController.locationImage,
+                          )
+                              : null,
+                          child: place.location.address.isEmpty
+                          ? const Icon(Icons.location_off, size: 40)
+                              : null,
+                          ),
                   ),
-                ),
                 Container(
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(
@@ -64,7 +77,9 @@ class PlaceDetailScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    place.location.address,
+                    place.location.address.isNotEmpty
+                        ? place.location.address
+                        : "No Address Available",
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleLarge!
                         .copyWith(color: theme.colorScheme.onSurface),

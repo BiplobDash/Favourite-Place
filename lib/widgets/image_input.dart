@@ -25,7 +25,19 @@ class ImageInput extends StatelessWidget {
       child: Obx((){
         if (addPlaceController.selectedImage.value != null) {
           return GestureDetector(
-            onTap: addPlaceController.takePicture,
+            onTap: ()async{
+              final result = await addPlaceController.takePicture();
+              result.fold(
+                    (failure) => Get.snackbar("Error", failure.message,
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white),
+                    (success) => Get.snackbar("Success", "Image Selected Successfully!",
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white),
+              );
+            },
             child: Image.file(
               addPlaceController.selectedImage.value!,
               fit: BoxFit.cover,

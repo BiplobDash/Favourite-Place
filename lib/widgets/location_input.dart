@@ -48,14 +48,38 @@ class LocationInput extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton.icon(
-              onPressed: addPlaceController.getCurrentLocation,
+              onPressed: ()async{
+                final result = await addPlaceController.getCurrentLocation();
+                result.fold(
+                      (failure) => Get.snackbar("Error", failure.message,
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white),
+                      (success) => Get.snackbar("Success", "Get Current Location Successfully!",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white),
+                );
+              },
               label: Text(
                 AppConfig.getCurrentLocation,
               ),
               icon: const Icon(Icons.location_on),
             ),
             TextButton.icon(
-              onPressed: addPlaceController.selectOnMap,
+              onPressed: () async{
+                final result = await addPlaceController.selectOnMap();
+                result.fold(
+                      (failure) => Get.snackbar("Error", failure.message,
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white),
+                      (success) => Get.snackbar("Success", "Select On Map Successfully!",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white),
+                );
+              },
               label: Text(
                 AppConfig.selectOnMap,
               ),

@@ -44,7 +44,19 @@ class _AddPlacesScreenState extends State<AddPlacesScreen> {
               height: 16,
             ),
             ElevatedButton.icon(
-              onPressed: addPlaceController.savePlace,
+              onPressed: ()async{
+                final result = await addPlaceController.savePlace();
+                result.fold(
+                      (failure) => Get.snackbar("Error", failure.message,
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white),
+                      (success) => Get.snackbar("Success", "Place added successfully!",
+                      snackPosition: SnackPosition.BOTTOM,
+                      backgroundColor: Colors.green,
+                      colorText: Colors.white),
+                );
+              },
               label: Text(AppConfig.addPlace),
               icon: const Icon(Icons.add),
             ),
